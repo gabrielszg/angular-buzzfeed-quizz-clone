@@ -6,7 +6,7 @@ import quizzQuestions from '../../data/quizz_questions.json';
 	standalone: true,
 	imports: [],
 	templateUrl: './quizz.component.html',
-	styleUrl: './quizz.component.css',
+	styleUrls: ['./quizz.component.css', './quizz.responsive.component.css'],
 })
 export class QuizzComponent implements OnInit {
 	title: string = '';
@@ -42,12 +42,13 @@ export class QuizzComponent implements OnInit {
 		if (this.questionMaxIndex > this.questionIndex) {
 			this.questionSelected = this.questions[this.questionIndex];
 		} else {
-      const finalAnswer: string = await this.checkResult(this.answers);
+			const finalAnswer: string = await this.checkResult(this.answers);
 			this.finished = true;
-      this.answerSelected = quizzQuestions.results[
-        finalAnswer as keyof typeof quizzQuestions.results
-      ];
-    }
+			this.answerSelected =
+				quizzQuestions.results[
+					finalAnswer as keyof typeof quizzQuestions.results
+				];
+		}
 	}
 
 	async checkResult(answers: string[]) {
@@ -56,12 +57,12 @@ export class QuizzComponent implements OnInit {
 				arr.filter((item) => item === previous).length >
 				arr.filter((item) => item === current).length
 			) {
-        return previous;
+				return previous;
 			} else {
-        return current;
-      }
+				return current;
+			}
 		});
 
-    return result;
+		return result;
 	}
 }

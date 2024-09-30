@@ -1,0 +1,14 @@
+@media screen and (max-width: 992px) {
+    .quizz_logo > img {
+        width: 350px;
+        margin-top: 30px;
+    }
+
+    .quizz_questions > h3 { 
+        text-align: center;
+    }
+
+    .quizz_results > p {
+        text-align: center;
+    }
+}
