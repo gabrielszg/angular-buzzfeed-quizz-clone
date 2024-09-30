@@ -9,9 +9,14 @@
     </div>
 
     <div class="quizz_options">
-        <button class="btn-option">
-            optionname
-        </button>
+        @for (option of questionSelected.options; track $index) {
+            <button 
+                class="btn-option" 
+                (click)="playerChoose(option.alias)"
+            >
+                {{option.name}}
+            </button>
+        }
     </div>
 
     @if (finished) {
