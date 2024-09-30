@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import quizzQuestions from '../../data/quizz_questions.json';
+import { QuizzService } from '../../services/quizz.service';
 
 @Component({
 	selector: 'app-quizz',
@@ -18,17 +18,22 @@ export class QuizzComponent implements OnInit {
 	questionMaxIndex: number = 0;
 	finished: boolean = false;
 
+	constructor(private quizzService: QuizzService) {}
+
 	ngOnInit(): void {
-		if (quizzQuestions) {
-			this.finished = false;
-			this.title = quizzQuestions.title;
+		this.loadQuestions();
+	}
 
-			this.questions = quizzQuestions.questions;
-			this.questionSelected = this.questions[this.questionIndex];
-
-			this.questionIndex = 0;
-			this.questionMaxIndex = this.questions.length;
-		}
+	loadQuestions() {
+		this.finished = false;
+		this.title = this.quizzService.getTitle();
+		
+		this.questionIndex = 0;
+		
+		this.questions = this.quizzService.getQuestions();
+		this.questionSelected = this.questions[this.questionIndex];
+		
+		this.questionMaxIndex = this.questions.length;
 	}
 
 	playerChoose(value: string) {
@@ -42,31 +47,13 @@ export class QuizzComponent implements OnInit {
 		if (this.questionMaxIndex > this.questionIndex) {
 			this.questionSelected = this.questions[this.questionIndex];
 		} else {
-			const finalAnswer: string = await this.checkResult(this.answers);
+			const finalAnswer: string = await this.quizzService.checkResult(this.answers);
 			this.finished = true;
-			this.answerSelected =
-				quizzQuestions.results[
-					finalAnswer as keyof typeof quizzQuestions.results
-				];
+			this.answerSelected = this.quizzService.getResults(finalAnswer);
 		}
 	}
 
-	async checkResult(answers: string[]) {
-		const result = answers.reduce((previous, current, i, arr) => {
-			if (
-				arr.filter((item) => item === previous).length >
-				arr.filter((item) => item === current).length
-			) {
-				return previous;
-			} else {
-				return current;
-			}
-		});
-
-		return result;
-	}
-
-	returnToQuestionnaire() {
-		location.reload();
+	repeatQuiz() {
+		this.loadQuestions();
 	}
 }
